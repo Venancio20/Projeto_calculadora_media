@@ -1,64 +1,64 @@
-const form = document.getElementById('form-atividade');
-const imgAprovado = '<img src=" ./images/aprovado.png" alt="Emoji celebrando" />';
-const imgReprovado = '<img src=" ./images/reprovado.png" alt="Emoji decepcionado" />';
-const atividades = [];
-const notas = [];
-const spanAprovado = '<span class="resultado aprovado">Aprovado</span>';
-const spanReprovado = '<span class="resultado reprovado">Reprovado</span>';
-const notaMinima = parseFloat(prompt("Digite a nota mínima:"));
-
+const form = document.getElementById('form-contato');
+const contato = [];
+const numero = [];
+const inputContato = document.getElementById('contato');
+const inputNumero = document.getElementById('telefone');
+const botao1 = document.getElementById('btn1');
+const botao2 = document.getElementById('btn2');
 
 let linhas = '';
 
-form.addEventListener('submit', function(e) {
+
+
+botao1.addEventListener('click', function(e){
     e.preventDefault();
 
-    adicionaLinha();
-    atualizaTabela();
-    atualizaMediafinal();
+    testarNumero();
 });
 
-function adicionaLinha() {
-    const inputNomeAtividade = document.getElementById('nome-atividade');
-    const inputNotaAtividade = document.getElementById('nota-atividade');
+function testarNumero(){
+    if(!/^\d{9,11}$/.test(inputNumero.value)){
+        alert('O número de telefone deve conter entre 9 e 11 dígitos, e apenas números');
+    }else{
+        adicionaLinha();
+        atualizaTabela();
+    }
+}
 
-    if (atividades.includes(inputNomeAtividade.value)) {
-        alert(`A atividade: ${inputNomeAtividade.value} já foi inserida`);
-    } else {
-        atividades.push(inputNomeAtividade.value);
-        notas.push(parseFloat(inputNotaAtividade.value));
+function adicionaLinha(){
+    //verifica se o contato já esxite
+    if(contato.includes(inputContato.value)){
+        alert(`O contato: ${inputContato.value} já consta em sua lista`);
+    } else{
+    contato.push(inputContato.value);
+    numero.push(inputNumero.value);
 
-        let linha = '<tr>';
-        linha += `<td>${inputNomeAtividade.value}</td>`;
-        linha += `<td>${inputNotaAtividade.value}</td>`;
-        linha += `<td>${inputNotaAtividade.value >= notaMinima ? imgAprovado : imgReprovado}</td>`;
-        linha += '</tr>';
+    let linha = '<tr>';
+    linha += `<td>${inputContato.value}</td>`;
+    linha += `<td>${inputNumero.value}</td>`;
+    linha += `</tr>`;
 
     linhas += linha;
     }
-
-    inputNomeAtividade.value = ''; 
-    inputNotaAtividade.value = '';
+    inputContato.value = '';
+    inputNumero.value = '';
 }
 
-function atualizaTabela() {
+function atualizaTabela(){
     const corpoTabela = document.querySelector('tbody');
     corpoTabela.innerHTML = linhas;
 }
 
-function atualizaMediafinal() {
-    const mediaFinal = calculaMediaFinal();
+botao2.addEventListener('click', function(e){
+    e.preventDefault();
 
-    document.getElementById('media-final-valor').innerHTML = mediaFinal.toFixed(2);
-    document.getElementById('media-final-resultado').innerHTML = mediaFinal >= notaMinima? spanAprovado : spanReprovado;
-}
+    const contatoPesquisado = document.getElementById('pesquisar-contato');
+    const posicaoPesquisado = contato.indexOf(contatoPesquisado.value);
+    const numeroPesquisado = numero[posicaoPesquisado];
 
-function calculaMediaFinal() {
-    let somaDasNotas = 0;
-
-    for  (let i = 0; i < notas.length; i++) {
-        somaDasNotas += notas[i];
+    if (posicaoPesquisado !== -1) {
+        alert(`${contatoPesquisado.value} número ${numeroPesquisado}`);
+    } else {
+        alert("Contato não encontrado!");
     }
-
-    return somaDasNotas / notas.length;  
-}
+});
